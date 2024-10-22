@@ -4,14 +4,23 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+// import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.io.File;
-import java.io.IOException;
-import swervelib.parser.SwerveParser;
+import frc.robot.Constants.AprilTagConstants;
+import frc.robot.subsystems.LEDsSubSystem;
+import frc.robot.subsystems.Vision.ObjectVision;
+
+// import java.io.File;
+// import java.io.IOException;
+
+import org.photonvision.PhotonCamera;
+
+// import swervelib.parser.SwerveParser;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
@@ -27,6 +36,10 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  ObjectVision m_ObjectVision;
+  public static PhotonCamera camObj = new PhotonCamera("camObj"); // Create a new PhotonCamera object
+  public static LEDsSubSystem m_LEDsSubSystem = new LEDsSubSystem(); // Create a new LEDsSubSystem object
 
   public Robot()
   {
@@ -51,6 +64,8 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
+    m_ObjectVision = new ObjectVision(m_LEDsSubSystem);
+    DriverStation.silenceJoystickConnectionWarning(true); // Silence the joystick connection warning
   }
 
   /**
@@ -89,6 +104,7 @@ public class Robot extends TimedRobot
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
+    m_LEDsSubSystem.scanEffect(60, 255, 255);
   }
 
   /**
@@ -99,6 +115,7 @@ public class Robot extends TimedRobot
   {
     m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    aprilTagAlliance();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -131,6 +148,7 @@ public class Robot extends TimedRobot
     }
     m_robotContainer.setDriveMode();
     m_robotContainer.setMotorBrake(true);
+    aprilTagAlliance();
   }
 
   /**
@@ -139,6 +157,8 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+    m_robotContainer.spencerButtons();
+    m_ObjectVision.watchForNote();
   }
 
   @Override
@@ -171,5 +191,15 @@ public class Robot extends TimedRobot
   @Override
   public void simulationPeriodic()
   {
+  }
+      /**
+   * Sets the AprilTag constants based on the alliance color.
+   */
+  public static void aprilTagAlliance(){
+    AprilTagConstants.ampID     = DriverStation.getAlliance().get() == Alliance.Blue ? 6 : 5;
+    AprilTagConstants.speakerID = DriverStation.getAlliance().get() == Alliance.Blue ? 7 : 4;
+    AprilTagConstants.stageIDA  = DriverStation.getAlliance().get() == Alliance.Blue ? 14 : 13;
+    AprilTagConstants.stageIDB  = DriverStation.getAlliance().get() == Alliance.Blue ? 15 : 12;
+    AprilTagConstants.stageIDC  = DriverStation.getAlliance().get() == Alliance.Blue ? 16 : 11;
   }
 }

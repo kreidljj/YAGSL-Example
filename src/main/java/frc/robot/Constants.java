@@ -39,6 +39,21 @@ public final class Constants
 
     // Hold time on motor brakes when disabled
     public static final double WHEEL_LOCK_TIME = 10; // seconds
+  
+    public static double Max_Speed_Multiplier = 0.75;
+  
+    // public static double DrivekP = 0.00023;
+    // public static double DrivekI = 0.0000002;
+    // public static double DrivekD = 1.0;
+    // public static double DrivekF = 0.0;
+    // public static double DrivekIz = 0.0;
+
+    // public static double AnglekP = 0.004; //045
+    // public static double AnglekI = 0.0;
+    // public static double AnglekD = 1.5;
+    // public static double AnglekF = 0.0; //0.000005
+    // public static double AnglekIz = 0.0;
+    
   }
 
   public static class OperatorConstants
@@ -49,5 +64,13 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND  = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
+  }
+  public static final class AprilTagConstants
+  {
+    public static int ampID = 0;
+    public static int speakerID = 0;
+    public static int stageIDA = 0;
+    public static int stageIDB = 0;
+    public static int stageIDC = 0; 
   }
 }
