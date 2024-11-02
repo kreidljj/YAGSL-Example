@@ -391,7 +391,7 @@ public class SwerveSubsystem extends SubsystemBase
                       .until(() -> swerveDrive.getPose().getTranslation().getDistance(new Translation2d(0, 0)) >
                                    distanceInMeters)
                                  );
-  }
+  } 
 
   /**
    * Sets the maximum speed of the swerve drive.
